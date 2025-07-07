@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Shall We Make Peace? ❤️</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: sans-serif;
+      background-color: #ffe6e6;
+      text-align: center;
+      overflow-x: hidden;
+    }
+    #question, #response {
+      margin-top: 100px;
+    }
+    .heart {
+      font-size: 50px;
+      margin: 20px;
+    }
+    .buttons {
+      margin-top: 30px;
+    }
+    button {
+      font-size: 1.5em;
+      padding: 15px 30px;
+      margin: 10px;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      background-color: #ff6666;
+      color: white;
+    }
+    #response {
+      display: none;
+    }
+    .confetti {
+      position: fixed;
+      top: 0;
+      left: 0;
+      pointer-events: none;
+      z-index: 9999;
+    }
+    #blocker {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background-color: rgba(0,0,0,0.7);
+      color: white;
+      z-index: 10000;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 40px;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="question">
+    <h1>Shall we make peace now? 😊</h1>
+    <div class="heart">❤️</div>
+    <div class="buttons">
+      <button id="yes">YES 😊</button>
+      <button id="no">NO 😠</button>
+    </div>
+  </div>
+
+  <div id="response">
+    <h1>Yayyyyyy 🎉</h1>
+    <div class="heart">💕</div>
+    <div id="message">I love you, dummy 😘</div>
+  </div>
+
+  <div id="blocker">
+    <div id="blocker-message">
+      <h2>No escape! 😈</h2>
+      <p>You can't close the page! I won't let you go without making peace!</p>
+      <p>It's counted as if you clicked YES automatically! ❤️</p>
+    </div>
+  </div>
+
+  <script>
+    const yesBtn = document.getElementById('yes');
+    const noBtn = document.getElementById('no');
+    const questionDiv = document.getElementById('question');
+    const responseDiv = document.getElementById('response');
+    const blocker = document.getElementById('blocker');
+    let clickCount = 0;
+
+    const noButtonTexts = [
+      "NO 😠", "Are you sure? 😒", "Really sure? 😤",
+      "Final question! 😠", "Seriously? 😡", "Please say yes 😫", "ENOUGH! JUST SAY YES! 😭"
+    ];
+
+    window.addEventListener('beforeunload', function(e) {
+      if (!responseDiv.style.display || responseDiv.style.display === "none") {
+        e.preventDefault();
+        showBlocker();
+        forceYes();
+        e.returnValue = '';
+        return '';
+      }
+    });
+
+    function showBlocker() {
+      blocker.style.display = 'flex';
+      setTimeout(() => blocker.style.display = 'none', 3000);
+    }
+
+    function forceYes() {
+      questionDiv.style.display = 'none';
+      responseDiv.style.display = 'block';
+      for(let i = 0; i < 100; i++) {
+        setTimeout(createConfetti, i * 30);
+      }
+    }
+
+    yesBtn.addEventListener('click', () => {
+      forceYes();
+    });
+
+    noBtn.addEventListener('click', () => {
+      clickCount++;
+      if (clickCount < noButtonTexts.length) {
+        noBtn.textContent = noButtonTexts[clickCount];
+      } else {
+        noBtn.style.display = 'none';
+      }
+
+      // Make YES button bigger
+      yesBtn.style.fontSize = (1.5 + clickCount * 0.3) + "em";
+
+      // Move NO button randomly
+      const x = Math.random() * (window.innerWidth - 200);
+      const y = Math.random() * (window.innerHeight - 100);
+      noBtn.style.position = 'absolute';
+      noBtn.style.left = `${x}px`;
+      noBtn.style.top = `${y}px`;
+    });
+
+    function createConfetti() {
+      const confetti = document.createElement('div');
+      confetti.className = 'confetti';
+      confetti.innerHTML = ['❤️','💖','💘','💝','💗'][Math.floor(Math.random()*5)];
+      confetti.style.left = Math.random() * window.innerWidth + 'px';
+      confetti.style.fontSize = Math.random() * 20 + 20 + 'px';
+      confetti.style.position = 'fixed';
+      confetti.style.top = '0px';
+      document.body.appendChild(confetti);
+
+      let fall = setInterval(() => {
+        let top = parseFloat(confetti.style.top);
+        if (top > window.innerHeight) {
+          confetti.remove();
+          clearInterval(fall);
+        } else {
+          confetti.style.top = top + 5 + 'px';
+        }
+      }, 50);
+    }
+  </script>
+</body>
+</html>
